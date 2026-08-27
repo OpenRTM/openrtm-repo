@@ -1,0 +1,45 @@
+Package: openrtm2
+Version: 2.1.0-0
+Architecture: amd64
+Maintainer: Noriaki Ando <n-ando@aist.go.jp>
+Installed-Size: 22854
+Depends: omniorb-nameserver, openrtm2-naming (>= 2.0.2-0)
+Filename: dists/noble/main/binary-amd64/openrtm2_2.1.0-0_amd64.deb
+Size: 3142852
+MD5sum: 305738a79a0080db464f50e3f3f2c8c2
+SHA1: a773a29c7a0aa99344af60887199f65cccae4603
+SHA256: 311b7d24329b68f0178a3af9612b6882a220af23d089e3492df9ae3bdd5bc572
+Section: science
+Priority: extra
+Multi-Arch: same
+Homepage: http://www.openrtm.org
+Description: OpenRTM-aist, RT-Middleware distributed by AIST
+ OpenRTM-aist is a reference implementation of RTC (Robotic Technology
+ Component Version 1.1, formal/12-09-01) specification which is OMG
+ standard (http://www.omg.org/spec/RTC/). OpenRTM-aist includes
+ RT-Middleware runtime environment and RTC framework. The OMG standard
+ defines a component model and certain important infrastructure
+ services applicable to the domain of robotics software
+ development. OpenRTM-aist is being developed and distributed by
+ National Institute of Advanced Industrial Science and Technology
+ (AIST), Japan. Please see http://www.openrtm.org/ for more detail.
+
+Package: openrtm2-naming
+Source: openrtm2
+Version: 2.1.0-0
+Architecture: amd64
+Maintainer: Noriaki Ando <n-ando@aist.go.jp>
+Installed-Size: 19
+Breaks: openrtm2 (<< 2.0.2-0)
+Replaces: openrtm2 (<< 2.0.2-0)
+Filename: dists/noble/main/binary-amd64/openrtm2-naming_2.1.0-0_amd64.deb
+Size: 4294
+MD5sum: a4c9686e59f66d92c06abce18ca0c105
+SHA1: aba812ade87b0342555ce998f6a15c0fcfd0e511
+SHA256: 8ff322a97f933cadb14b6c8ce691e138956cf84f8f694f20bad156666bd874c3
+Section: science
+Priority: extra
+Multi-Arch: same
+Homepage: http://www.openrtm.org
+Description: OpenRTM-aist name server launcher
+
