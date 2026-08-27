@@ -4,7 +4,7 @@ Architecture: amd64
 Maintainer: Noriaki Ando <n-ando@aist.go.jp>
 Installed-Size: 22854
 Depends: omniorb-nameserver, openrtm2-naming (>= 2.0.2-0)
-Filename: dists/noble/main/binary-amd64/openrtm2_2.1.0-0_amd64.deb
+Filename: https://github.com/OpenRTM/OpenRTM-aist/releases/download/v2.1.0/openrtm2_2.1.0-0_amd64.deb
 Size: 3142852
 MD5sum: 305738a79a0080db464f50e3f3f2c8c2
 SHA1: a773a29c7a0aa99344af60887199f65cccae4603
@@ -32,7 +32,7 @@ Maintainer: Noriaki Ando <n-ando@aist.go.jp>
 Installed-Size: 19
 Breaks: openrtm2 (<< 2.0.2-0)
 Replaces: openrtm2 (<< 2.0.2-0)
-Filename: dists/noble/main/binary-amd64/openrtm2-naming_2.1.0-0_amd64.deb
+Filename: https://github.com/OpenRTM/OpenRTM-aist/releases/download/v2.1.0/openrtm2-naming_2.1.0-0_amd64.deb
 Size: 4294
 MD5sum: a4c9686e59f66d92c06abce18ca0c105
 SHA1: aba812ade87b0342555ce998f6a15c0fcfd0e511
