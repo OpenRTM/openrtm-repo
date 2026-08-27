@@ -25,35 +25,41 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # OpenRTM-aist の v2.1.0 リリースから .deb ファイルをダウンロード
           mkdir -p deb-packages
+          # OpenRTM-aist の v2.1.0 リリースから .deb ファイルを一時的にダウンロード
           gh release download v2.1.0 \
             --repo OpenRTM/OpenRTM-aist \
             --pattern "*.deb" \
             --dir deb-packages
 
-      - name: Generate APT Repository Structure
+      - name: Generate APT Repository Structure (Metadata Only)
         run: |
-          # Noble (Ubuntu 24.04) amd64 用のディレクトリ構造を作成
           ARCH_DIR="public/dists/noble/main/binary-amd64"
           mkdir -p "$ARCH_DIR"
 
-          # .deb ファイルを配置ディレクトリにコピー
-          cp deb-packages/*.deb "$ARCH_DIR/"
+          # 一時ディレクトリで Packages メタデータを生成
+          dpkg-scanpackages deb-packages /dev/null > Packages.tmp
 
-          # Packages および Packages.gz (メタデータ) の生成
-          cd public
-          dpkg-scanpackages dists/noble/main/binary-amd64 /dev/null > dists/noble/main/binary-amd64/Packages
-          gzip -k -f dists/noble/main/binary-amd64/Packages
+          # Filename 行を GitHub Releases の直リンク URL (https://...) に書き換えて公開用ディレクトリへ出力
+          # ※ deb-packages/filename.deb -> https://github.com/OpenRTM/OpenRTM-aist/releases/download/v2.1.0/filename.deb
+          RELEASE_URL="https://github.com/OpenRTM/OpenRTM-aist/releases/download/v2.1.0"
+          
+          sed "s|Filename: deb-packages/|Filename: $RELEASE_URL/|g" Packages.tmp > "$ARCH_DIR/Packages"
+
+          # 圧縮版 Packages.gz の作成
+          gzip -k -f "$ARCH_DIR/Packages"
 
           # Release ファイルの簡易生成
-          cat <<EOF > dists/noble/main/binary-amd64/Release
+          cat <<EOF > "$ARCH_DIR/Release"
           Archive: noble
           Component: main
           Origin: OpenRTM
           Label: OpenRTM Repository
           Architecture: amd64
           EOF
+
+          # 後始末（public ディレクトリに .deb ファイルが含まれないことを保証）
+          rm -f Packages.tmp
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
