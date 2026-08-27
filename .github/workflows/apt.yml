@@ -1,0 +1,62 @@
+name: Build and Deploy APT Repository
+
+on:
+  workflow_dispatch: # 手動実行用
+  push:
+    branches:
+      - main # mainブランチ更新時に実行
+
+jobs:
+  build-repo:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # gh-pages ブランチへの書き込み権限
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install APT tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev
+
+      - name: Download .deb files from Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # OpenRTM-aist の v2.1.0 リリースから .deb ファイルをダウンロード
+          mkdir -p deb-packages
+          gh release download v2.1.0 \
+            --repo OpenRTM/OpenRTM-aist \
+            --pattern "*.deb" \
+            --dir deb-packages
+
+      - name: Generate APT Repository Structure
+        run: |
+          # Noble (Ubuntu 24.04) amd64 用のディレクトリ構造を作成
+          ARCH_DIR="public/dists/noble/main/binary-amd64"
+          mkdir -p "$ARCH_DIR"
+
+          # .deb ファイルを配置ディレクトリにコピー
+          cp deb-packages/*.deb "$ARCH_DIR/"
+
+          # Packages および Packages.gz (メタデータ) の生成
+          cd public
+          dpkg-scanpackages dists/noble/main/binary-amd64 /dev/null > dists/noble/main/binary-amd64/Packages
+          gzip -k -f dists/noble/main/binary-amd64/Packages
+
+          # Release ファイルの簡易生成
+          cat <<EOF > dists/noble/main/binary-amd64/Release
+          Archive: noble
+          Component: main
+          Origin: OpenRTM
+          Label: OpenRTM Repository
+          Architecture: amd64
+          EOF
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
